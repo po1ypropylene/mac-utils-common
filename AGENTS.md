@@ -9,3 +9,8 @@ its name, service identifier, runtime options, and permission requirements.
 Keep its README commands aligned with its scripts. Modify only repositories and
 files within the user-authorized scope; treat any reference repositories as
 read-only unless the user explicitly authorizes changes.
+
+Start lifecycle scripts from [the install template](templates/install.sh) and
+[the uninstall template](templates/uninstall.sh). Copy them into the target
+repository's `scripts/` directory and adapt them as described in the service
+instructions. The templates are examples, not scripts to run in this shared folder.

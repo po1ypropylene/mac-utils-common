@@ -36,6 +36,41 @@ changes to it.
   to find a hashed global DerivedData directory. Keep routine polling logs quiet
   in Release while retaining useful startup and failure diagnostics.
 
+## Script templates
+
+Start with [templates/install.sh](../templates/install.sh) and
+[templates/uninstall.sh](../templates/uninstall.sh). Copy them into the target
+repository as `scripts/install.sh` and `scripts/uninstall.sh`; do not execute them
+from this shared guidance folder. The copied scripts resolve the project root
+as the parent of their own directory.
+
+Before using the copies:
+
+- Set `utilityName` and `serviceLabel` consistently in both scripts. In the
+  installer, set `projectName` and `schemeName` to the actual Xcode project and
+  shared scheme. `utilityName` must match the built executable's filename.
+- Set `defaultArguments` to the utility's continuous-service options, one array
+  element per argument or value, for example `("--interval" "1")` only if the
+  utility supports those options. The template defaults to no arguments.
+  Supplied installer arguments replace this array; updates without arguments
+  restore the defaults. Adapt the rejected one-shot/help modes and validate
+  utility-specific options before unloading an existing service.
+- Add any required permission guidance to the README and installer completion
+  message. Add workload-specific plist keys only when appropriate.
+- Add migration cleanup only for confirmed legacy paths belonging to this
+  utility. The generic templates deliberately contain no legacy deletion paths.
+- Make the copied files executable with
+  `chmod +x scripts/install.sh scripts/uninstall.sh`, then verify them using the
+  checks below. Keep the copies in the target repository so users do not need
+  this shared folder to install or uninstall their utility.
+
+The installer builds Release before unloading the existing service, prepares and
+validates a temporary plist with safely encoded argument strings, installs the
+binary, and enables and starts the LaunchAgent. The uninstaller unloads the job
+and removes its executable and plist, retaining logs and unrelated files. These
+are starting points: adapt and test them against the target utility rather than
+assuming the example configuration is ready to install.
+
 ## Installation contract
 
 1. Choose a stable service label and paths. For example:
